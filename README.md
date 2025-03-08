@@ -9,7 +9,7 @@ This guide explains how to **clone**, **push changes**, and **ignore files** whe
 To work on the project, you need to clone the repository to your local system.
 
 ### Steps:
-1. Open **Terminal** (Linux/macOS) or **Command Prompt/PowerShell** (Windows).
+1. Open **Terminal** (Linux/macOS) or **Command Prompt/PowerShell** (Windows) or Vs code.
 2. Run the following command to clone the repository:
    ```sh
    git clone https://github.com/sangeerthana03/errorrectifyvote.git
@@ -18,6 +18,14 @@ To work on the project, you need to clone the repository to your local system.
    ```sh
    cd errorrectifyvote
    ```
+4. install node modules :
+   ```sh
+   cd backend
+   npm install
+   ```
+   do the same for front-end
+   
+   
 
 ## 2. Making Changes and Committing
 After making changes to the project, follow these steps to commit and push your changes.
