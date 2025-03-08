@@ -1,18 +1,20 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { AuthContext } from "../context/AuthContext";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
+import axios from "axios";
 
 const LoginRegister = () => {
+  useEffect(() => {
+    console.log("✅ LoginRegister component mounted!");
+  }, []);
+
+  console.log("✅ LoginRegister is rendering..."); // Debugging Log
   const { login } = useContext(AuthContext);
   const navigate = useNavigate();
 
-  const [isRegister, setIsRegister] = useState(false);
   const [formData, setFormData] = useState({
-    collegeId: "",
     email: "",
-    className: "",
     password: "",
-    role: "Student",
   });
   const [error, setError] = useState("");
 
@@ -22,79 +24,30 @@ const LoginRegister = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    if (!isRegister) {
-      // Login request
+    setError(""); // Reset errors before submitting
+
+    try {
+      console.log("🔹 Attempting Login...");
       const res = await login(formData.email, formData.password);
       if (res.success) {
         navigate("/dashboard");
       } else {
         setError(res.message);
       }
-    } else {
-      // Registration logic
-      try {
-        const response = await fetch("http://localhost:5000/api/auth/register", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(formData),
-        });
-
-        const data = await response.json();
-        if (response.ok) {
-          setIsRegister(false);
-        } else {
-          setError(data.error);
-        }
-      } catch (err) {
-        setError("Registration failed");
-      }
+    } catch (err) {
+      console.error("❌ Error:", err.response?.data?.message || err.message);
+      setError(err.response?.data?.message || "Something went wrong");
     }
   };
 
   return (
     <div className="flex justify-center items-center h-screen bg-gray-100">
       <div className="bg-white p-8 rounded-lg shadow-lg w-96">
-        <h2 className="text-2xl font-bold text-center mb-4">
-          {isRegister ? "Register" : "Login"}
-        </h2>
+        <h2 className="text-2xl font-bold text-center mb-4">Login</h2>
 
         {error && <p className="text-red-500 text-center">{error}</p>}
 
         <form onSubmit={handleSubmit}>
-          {isRegister && (
-            <>
-              <input
-                type="text"
-                name="collegeId"
-                placeholder="College ID"
-                value={formData.collegeId}
-                onChange={handleChange}
-                className="w-full p-2 border rounded mb-3"
-                required
-              />
-              <input
-                type="text"
-                name="className"
-                placeholder="Class Name"
-                value={formData.className}
-                onChange={handleChange}
-                className="w-full p-2 border rounded mb-3"
-                required
-              />
-              <select
-                name="role"
-                value={formData.role}
-                onChange={handleChange}
-                className="w-full p-2 border rounded mb-3"
-              >
-                <option value="Admin">Admin</option>
-                <option value="Sub-Admin">Sub-Admin</option>
-                <option value="Student">Student</option>
-              </select>
-            </>
-          )}
-
           <input
             type="email"
             name="email"
@@ -115,18 +68,15 @@ const LoginRegister = () => {
           />
 
           <button type="submit" className="w-full bg-blue-500 text-white p-2 rounded">
-            {isRegister ? "Register" : "Login"}
+            Login
           </button>
         </form>
 
         <p className="text-center mt-4">
-          {isRegister ? "Already have an account?" : "Don't have an account?"}
-          <button
-            onClick={() => setIsRegister(!isRegister)}
-            className="text-blue-500 ml-1"
-          >
-            {isRegister ? "Login" : "Register"}
-          </button>
+          Don't have an account?{" "}
+          <Link to="/register" className="text-blue-500 ml-1">
+            Register
+          </Link>
         </p>
       </div>
     </div>

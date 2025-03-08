@@ -6,9 +6,11 @@ const Register = () => {
   const navigate = useNavigate();
   
   const [userData, setUserData] = useState({
-    name: "",
+    collegeId: "",
     email: "",
     password: "",
+    role: "", // Example: "student" or "teacher"
+    className: "" // Example: "CS101"
   });
   const [error, setError] = useState("");
   
@@ -35,9 +37,9 @@ const Register = () => {
         <form onSubmit={handleSubmit} className="space-y-4">
           <input
             type="text"
-            name="name"
-            placeholder="Full Name"
-            value={userData.name}
+            name="collegeId"
+            placeholder="College ID"
+            value={userData.collegeId}
             onChange={handleChange}
             className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
             required
@@ -56,6 +58,24 @@ const Register = () => {
             name="password"
             placeholder="Password"
             value={userData.password}
+            onChange={handleChange}
+            className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+            required
+          />
+          <input
+            type="text"
+            name="role"
+            placeholder="Role (e.g., student, teacher)"
+            value={userData.role}
+            onChange={handleChange}
+            className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+            required
+          />
+          <input
+            type="text"
+            name="className"
+            placeholder="Class Name (e.g., CS101)"
+            value={userData.className}
             onChange={handleChange}
             className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
             required

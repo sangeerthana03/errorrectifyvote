@@ -1,6 +1,7 @@
 import { useState, useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
 import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const Login = () => {
   const { login } = useContext(AuthContext);
@@ -12,12 +13,24 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const res = await login(email, password);
+    setError("");
+    
+    console.log("Attempting login with:", { email, password });
 
-    if (res.success) {
-      navigate("/dashboard");
-    } else {
-      setError(res.message);
+    try {
+      const res = await axios.post("http://localhost:5000/api/auth/login", { email, password });
+      console.log("Login response:", res.data);
+      
+      if (res.data.success) {
+        console.log("Successfully logged in");
+        login(res.data.user, res.data.token); // Store user & token in AuthContext
+        navigate("/dashboard");
+      } else {
+        setError(res.data.message || "Login failed");
+      }
+    } catch (err) {
+      console.error("Login error:", err.response?.data?.message || err.message);
+      setError(err.response?.data?.message || "An error occurred. Please try again.");
     }
   };
 

@@ -2,6 +2,8 @@ import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import cors from "cors";
+const app = express();
+app.use(cors()); // ❌ Opens API to everyone (use only for testing)
 
 // Import Routes
 import authRoutes from "./routes/authRoutes.js";
@@ -16,7 +18,7 @@ import voteRoutes from "./routes/voteRoutes.js";
 // Load environment variables
 dotenv.config();
 
-const app = express();
+
 const PORT = process.env.PORT || 5000;
 
 // Middleware
@@ -35,7 +37,7 @@ app.use(express.urlencoded({extended:true}));
 
 app.use("/api/votes", voteRoutes);
 
-app.use(cors({ origin: "http://localhost:5173", credentials: true }));
+
 
 
 // Connect to MongoDB

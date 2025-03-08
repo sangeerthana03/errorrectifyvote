@@ -6,6 +6,7 @@ import dotenv from "dotenv";
 dotenv.config(); // Ensure environment variables are loaded
 
 // **REGISTER USER**
+// **REGISTER USER**
 export const register = async (req, res) => {
   const { collegeId, email, password, role, className } = req.body;
 
@@ -16,12 +17,8 @@ export const register = async (req, res) => {
       return res.status(400).json({ success: false, message: "User already exists" });
     }
 
-    // ✅ Hash the password before saving
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
-
-    // ✅ Save user with hashed password
-    const user = new User({ collegeId, email, password: hashedPassword, role, className });
+    // ✅ Remove manual hashing (it will be handled in `User.js`)
+    const user = new User({ collegeId, email, password, role, className });
     await user.save();
 
     res.status(201).json({ success: true, message: "Registration Successful! Waiting for Approval." });
@@ -29,6 +26,7 @@ export const register = async (req, res) => {
     res.status(500).json({ success: false, error: error.message });
   }
 };
+
 
 // **LOGIN USER**
 export const login = async (req, res) => {
@@ -54,10 +52,10 @@ export const login = async (req, res) => {
       return res.status(401).json({ success: false, message: "Invalid credentials" });
     }
 
-    if (!user.isApproved) {
-      console.log("User approval pending");
-      return res.status(403).json({ success: false, message: "Approval Pending" });
-    }
+    // if (!user.isApproved) {
+    //   console.log("User approval pending");
+    //   return res.status(403).json({ success: false, message: "Approval Pending" });
+    // }
 
     // ✅ Generate JWT Token
     const token = jwt.sign(
